@@ -10,9 +10,13 @@ from spacy_lookup import Entity
 
 
 # stuff to run always here such as class/def
-def text_gov_org_match(text, lookup):
-
-    return ["government digital service", "Government Digital Service"]
+def text_gov_org_match(text):
+    """Return a list of GOV_ORG entities found at least once in a str."""
+    doc = nlp(text)
+    # remove any duplicates because dictionaries cannot have duplicate keys
+    list_of_gov_org_entities_with_duplicates = [token._.canonical for token in doc if token._.is_entity]
+    list_no_duplicates = list(dict.fromkeys(list_of_gov_org_entities_with_duplicates))
+    return list_no_duplicates
 
 
 def main():
