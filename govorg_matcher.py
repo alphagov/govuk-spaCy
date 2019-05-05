@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Iterates through a bunch of docs and creates a list of GOV_ORG entities for each doc.
+"""
+Named Entities are matched using the python module spacy-lookup,
+ and looks up in the data provided by different dictionaries.
+
+Iterates through a bunch of docs and creates a list of GOV_ORG entities for each doc.
 Usage:
     python3 govorg_matcher.py df
 """
@@ -10,6 +14,16 @@ from spacy_lookup import Entity
 
 
 # stuff to run always here such as class/def
+# if we call the function after import, need nlp defined
+nlp = spacy.load('en_core_web_sm')
+# get lookup
+GOV_ORG = get_govorg_list.main()
+# Create custom entity list
+entity = Entity(keywords_list=GOV_ORG, label='GOV_ORG')
+# happens after other processing steps
+nlp.add_pipe(entity, last=True)
+
+
 def text_gov_org_match(text):
     """Return a list of GOV_ORG entities found at least once in a str."""
     doc = nlp(text)
